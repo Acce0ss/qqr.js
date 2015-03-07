@@ -1018,10 +1018,13 @@ function QrCode() {
     // ECC (error correction capacity) determines how many intential errors are contained in the QR
     // code.
     canvas: function(data) {
-      data = normalizeData(data);
+        //wtf is the purpose of this data "normalization"?
+      //data = normalizeData(data);
 
-      // Module size of the generated QR code (i.e. 1-10).
-      var size = data.side
+      var border = data.border;
+
+      // Module size of the generated QR code (i.e. 1-10) -> mmm no??
+      var size = data.side-border;
 
       // `<canvas>` element used to render the QR code.
       var cvs = data.canvas || createCanvas();
@@ -1047,12 +1050,10 @@ function QrCode() {
       px /= width;
       px  = Math.floor(px);
 
-      var border = 8;
-
       // Draw the QR code.
-      c2d.clearRect(0, 0, size, size);
-      c2d.fillStyle = data.background || '#fff';
-      c2d.fillRect(0, 0, px * (width + border), px * (width + border));
+      //c2d.clearRect(0, 0, size, size);
+      //c2d.fillStyle = data.background || '#fff';
+      //c2d.fillRect(0, 0, px * (width) + 2*border, px * (width) + 2*border);
       c2d.fillStyle = data.foreground || '#000';
 
       var i, j;

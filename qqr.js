@@ -1021,21 +1021,10 @@ function QrCode() {
         //wtf is the purpose of this data "normalization"?
       //data = normalizeData(data);
 
-      var border = data.border;
-
-      // Module size of the generated QR code (i.e. 1-10) -> mmm no??
-      var size = data.side-border;
-
       // `<canvas>` element used to render the QR code.
       var cvs = data.canvas || createCanvas();
       // Retreive the 2D context of the canvas.
       var c2d = cvs.getContext('2d');
-      // Ensure the canvas has the correct dimensions.
-      //c2d.canvas.width  = size;
-      //c2d.canvas.height = size;
-      // Fill the canvas with the correct background colour.
-      c2d.fillStyle = data.background || '#fff';
-      c2d.fillRect(0, 0, size, size);
 
       // Determine the ECC level to be applied.
       eccLevel = ECC_LEVELS[(data.level && data.level.toUpperCase()) || 'L'];
@@ -1045,15 +1034,27 @@ function QrCode() {
 
       c2d.lineWidth = 1;
 
+      // Module size of the generated QR code (i.e. 1-10) -> mmm no??
+      var size = data.side;
+
       // Determine the *pixel* size.
       var px = size;
       px /= width;
       px  = Math.floor(px);
 
+      while (Math.abs(size - px*width) < 2*data.border)
+      {
+        px--;
+      }
+
+      console.log(width + " s: " + size + " px: " + px)
+
+      var border = Math.floor((size - px*width) / 2);
+
       // Draw the QR code.
-      //c2d.clearRect(0, 0, size, size);
-      //c2d.fillStyle = data.background || '#fff';
-      //c2d.fillRect(0, 0, px * (width) + 2*border, px * (width) + 2*border);
+      c2d.clearRect(0, 0, size, size);
+      c2d.fillStyle = data.background || '#fff';
+      c2d.fillRect(0, 0, size, size);
       c2d.fillStyle = data.foreground || '#000';
 
       var i, j;
